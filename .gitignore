@@ -5,6 +5,7 @@ output/*
 !output/explorer.html
 !output/explorer_data.js
 !output/results_auto.html
+!output/vercel.json
 .Rproj.user/
 .Rhistory
 .DS_Store
