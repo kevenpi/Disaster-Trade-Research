@@ -1,0 +1,67 @@
+
+\begingroup
+\centering
+\begin{tabular}{lcccccccc}
+   \tabularnewline \midrule \midrule
+   Dependent Variables:                                              & export\_value         & export\_qty           & export\_value         & export\_qty           & export\_value         & export\_qty           & export\_value         & export\_qty\\   
+    & \multicolumn{8}{c}{flood \$ } \\ 
+    & \multicolumn{8}{c}{flood tons } \\ 
+    & \multicolumn{8}{c}{drought \$ } \\ 
+    & \multicolumn{8}{c}{drought tons } \\ 
+    & \multicolumn{8}{c}{earthquake \$ } \\ 
+    & \multicolumn{8}{c}{earthquake tons } \\ 
+    & \multicolumn{8}{c}{storm \$ } \\ 
+    & \multicolumn{8}{c}{storm tons } \\ 
+   Model:                                                            & (1)                   & (2)                   & (3)                   & (4)                   & (5)                   & (6)                   & (7)                   & (8)\\  
+   \midrule
+   \emph{Variables}\\
+   flood\_dummy $\times$ flood\_exposed                              & -0.0231$^{**}$        & -0.0852$^{***}$       &                       &                       &                       &                       &                       &   \\   
+                                                                     & (0.0108)              & (0.0226)              &                       &                       &                       &                       &                       &   \\   
+   flood\_exposed $\times$ flood\_dummy\_lag1                        & -0.0035               & -0.0147               &                       &                       &                       &                       &                       &   \\   
+                                                                     & (0.0090)              & (0.0301)              &                       &                       &                       &                       &                       &   \\   
+   flood\_exposed $\times$ flood\_severe\_dummy                      & 0.0258                & 0.0145                &                       &                       &                       &                       &                       &   \\   
+                                                                     & (0.0209)              & (0.0420)              &                       &                       &                       &                       &                       &   \\   
+   flood\_exposed $\times$ flood\_severe\_dummy\_lag1                & 0.0033                & -0.0225               &                       &                       &                       &                       &                       &   \\   
+                                                                     & (0.0157)              & (0.0342)              &                       &                       &                       &                       &                       &   \\   
+   drought\_dummy $\times$ drought\_exposed                          &                       &                       & -0.0364$^{*}$         & -0.0877               &                       &                       &                       &   \\   
+                                                                     &                       &                       & (0.0213)              & (0.0697)              &                       &                       &                       &   \\   
+   drought\_exposed $\times$ drought\_dummy\_lag1                    &                       &                       & -0.0317$^{*}$         & -0.1956$^{***}$       &                       &                       &                       &   \\   
+                                                                     &                       &                       & (0.0192)              & (0.0577)              &                       &                       &                       &   \\   
+   drought\_exposed $\times$ drought\_severe\_dummy                  &                       &                       & 0.0285                & 0.0703                &                       &                       &                       &   \\   
+                                                                     &                       &                       & (0.0721)              & (0.1195)              &                       &                       &                       &   \\   
+   drought\_exposed $\times$ drought\_severe\_dummy\_lag1            &                       &                       & 0.0256                & 0.0552                &                       &                       &                       &   \\   
+                                                                     &                       &                       & (0.0724)              & (0.1262)              &                       &                       &                       &   \\   
+   earthquake\_dummy $\times$ earthquake\_exposed                    &                       &                       &                       &                       & 0.0294$^{*}$          & 0.0946$^{***}$        &                       &   \\   
+                                                                     &                       &                       &                       &                       & (0.0165)              & (0.0318)              &                       &   \\   
+   earthquake\_exposed $\times$ earthquake\_dummy\_lag1              &                       &                       &                       &                       & 0.0285$^{*}$          & 0.0939$^{***}$        &                       &   \\   
+                                                                     &                       &                       &                       &                       & (0.0157)              & (0.0353)              &                       &   \\   
+   earthquake\_exposed $\times$ earthquake\_severe\_dummy            &                       &                       &                       &                       & -0.0239               & -0.2003$^{***}$       &                       &   \\   
+                                                                     &                       &                       &                       &                       & (0.0196)              & (0.0498)              &                       &   \\   
+   earthquake\_exposed $\times$ earthquake\_severe\_dummy\_lag1      &                       &                       &                       &                       & -0.0296               & -0.1531$^{***}$       &                       &   \\   
+                                                                     &                       &                       &                       &                       & (0.0200)              & (0.0389)              &                       &   \\   
+   storm\_dummy $\times$ storm\_exposed                              &                       &                       &                       &                       &                       &                       & 0.0222$^{**}$         & 0.0209\\   
+                                                                     &                       &                       &                       &                       &                       &                       & (0.0111)              & (0.0305)\\   
+   storm\_exposed $\times$ storm\_dummy\_lag1                        &                       &                       &                       &                       &                       &                       & 0.0232$^{**}$         & 0.0175\\   
+                                                                     &                       &                       &                       &                       &                       &                       & (0.0106)              & (0.0326)\\   
+   storm\_exposed $\times$ storm\_severe\_dummy                      &                       &                       &                       &                       &                       &                       & -0.0240               & -0.0222\\   
+                                                                     &                       &                       &                       &                       &                       &                       & (0.0203)              & (0.0419)\\   
+   storm\_exposed $\times$ storm\_severe\_dummy\_lag1                &                       &                       &                       &                       &                       &                       & -0.0472$^{***}$       & 0.0047\\   
+                                                                     &                       &                       &                       &                       &                       &                       & (0.0177)              & (0.0369)\\   
+   \midrule
+   \emph{Fixed-effects}\\
+   iso3-year                                                         & Yes                   & Yes                   & Yes                   & Yes                   & Yes                   & Yes                   & Yes                   & Yes\\  
+   chapter-year                                                      & Yes                   & Yes                   & Yes                   & Yes                   & Yes                   & Yes                   & Yes                   & Yes\\  
+   iso3-chapter                                                      & Yes                   & Yes                   & Yes                   & Yes                   & Yes                   & Yes                   & Yes                   & Yes\\  
+   \midrule
+   \emph{Fit statistics}\\
+   Observations                                                      & 514,312               & 513,963               & 514,312               & 513,963               & 514,312               & 513,963               & 514,312               & 513,963\\  
+   Squared Correlation                                               & 0.98962               & 0.98138               & 0.98961               & 0.98159               & 0.98962               & 0.98147               & 0.98962               & 0.98137\\  
+   Pseudo R$^2$                                                      & 0.99372               & 0.98979               & 0.99372               & 0.98982               & 0.99372               & 0.98981               & 0.99372               & 0.98978\\  
+   BIC                                                               & $1.63\times 10^{10}$  & $2.55\times 10^{10}$  & $1.63\times 10^{10}$  & $2.54\times 10^{10}$  & $1.63\times 10^{10}$  & $2.55\times 10^{10}$  & $1.63\times 10^{10}$  & $2.55\times 10^{10}$\\   
+   \midrule \midrule
+   \multicolumn{9}{l}{\emph{Clustered (iso3) standard-errors in parentheses}}\\
+   \multicolumn{9}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+\end{tabular}
+\par\endgroup
+
+

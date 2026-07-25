@@ -1,5 +1,10 @@
 data/
-output/
+output/*
+!output/tables/
+!output/figures/
+!output/explorer.html
+!output/explorer_data.js
+!output/results_auto.html
 .Rproj.user/
 .Rhistory
 .DS_Store

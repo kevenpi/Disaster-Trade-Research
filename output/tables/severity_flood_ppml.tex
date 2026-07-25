@@ -1,0 +1,36 @@
+
+\begingroup
+\centering
+\begin{tabular}{lccc}
+   \tabularnewline \midrule \midrule
+   Dependent Variable: & \multicolumn{3}{c}{export\_value}\\
+                                      & Any flood             & Severe flood          & Both (dose) \\   
+   Model:                             & (1)                   & (2)                   & (3)\\  
+   \midrule
+   \emph{Variables}\\
+   exposed $\times$ flood             & -0.0188$^{*}$         &                       & -0.0231$^{**}$\\   
+                                      & (0.0099)              &                       & (0.0108)\\   
+   exposed $\times$ flood\_l1         & -0.0033               &                       & -0.0035\\   
+                                      & (0.0087)              &                       & (0.0090)\\   
+   exposed $\times$ flood\_sev        &                       & 0.0202                & 0.0258\\   
+                                      &                       & (0.0202)              & (0.0209)\\   
+   exposed $\times$ flood\_sev\_l1    &                       & 0.0023                & 0.0033\\   
+                                      &                       & (0.0150)              & (0.0157)\\   
+   \midrule
+   \emph{Fixed-effects}\\
+   iso3-year                          & Yes                   & Yes                   & Yes\\  
+   chapter-year                       & Yes                   & Yes                   & Yes\\  
+   iso3-chapter                       & Yes                   & Yes                   & Yes\\  
+   \midrule
+   \emph{Fit statistics}\\
+   Observations                       & 514,312               & 514,312               & 514,312\\  
+   Squared Correlation                & 0.98962               & 0.98962               & 0.98962\\  
+   Pseudo R$^2$                       & 0.99372               & 0.99372               & 0.99372\\  
+   BIC                                & $1.63\times 10^{10}$  & $1.63\times 10^{10}$  & $1.63\times 10^{10}$\\   
+   \midrule \midrule
+   \multicolumn{4}{l}{\emph{Clustered (iso3) standard-errors in parentheses}}\\
+   \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+\end{tabular}
+\par\endgroup
+
+

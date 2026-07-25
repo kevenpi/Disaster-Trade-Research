@@ -1,0 +1,44 @@
+
+\begingroup
+\centering
+\begin{tabular}{lcc}
+   \tabularnewline \midrule \midrule
+   Dependent Variable: & \multicolumn{2}{c}{export\_value}\\
+                                         & Any flood             & Severe flood \\   
+   Model:                                & (1)                   & (2)\\  
+   \midrule
+   \emph{Variables}\\
+   flood\_lead1 $\times$ exposed         & -0.0105               &   \\   
+                                         & (0.0082)              &   \\   
+   exposed $\times$ flood                & -0.0093               &   \\   
+                                         & (0.0105)              &   \\   
+   exposed $\times$ flood\_l1            & -0.0069               &   \\   
+                                         & (0.0092)              &   \\   
+   exposed $\times$ flood\_lag2          & 0.0032                &   \\   
+                                         & (0.0086)              &   \\   
+   flood\_sev\_lead1 $\times$ exposed    &                       & 0.0238\\   
+                                         &                       & (0.0192)\\   
+   exposed $\times$ flood\_sev           &                       & 0.0121\\   
+                                         &                       & (0.0163)\\   
+   exposed $\times$ flood\_sev\_l1       &                       & 0.0052\\   
+                                         &                       & (0.0164)\\   
+   exposed $\times$ flood\_sev\_lag2     &                       & 0.0124\\   
+                                         &                       & (0.0148)\\   
+   \midrule
+   \emph{Fixed-effects}\\
+   iso3-year                             & Yes                   & Yes\\  
+   chapter-year                          & Yes                   & Yes\\  
+   iso3-chapter                          & Yes                   & Yes\\  
+   \midrule
+   \emph{Fit statistics}\\
+   Observations                          & 449,616               & 449,616\\  
+   Squared Correlation                   & 0.99086               & 0.99087\\  
+   Pseudo R$^2$                          & 0.99432               & 0.99432\\  
+   BIC                                   & $1.32\times 10^{10}$  & $1.32\times 10^{10}$\\   
+   \midrule \midrule
+   \multicolumn{3}{l}{\emph{Clustered (iso3) standard-errors in parentheses}}\\
+   \multicolumn{3}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+\end{tabular}
+\par\endgroup
+
+

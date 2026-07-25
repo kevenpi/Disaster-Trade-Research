@@ -1,0 +1,44 @@
+
+\begingroup
+\centering
+\begin{tabular}{lcccc}
+   \tabularnewline \midrule \midrule
+   Dependent Variables: & \multicolumn{3}{c}{export\_value} & export\_qty\\
+                                & Value, sev=p50        & Value, sev=p75        & Value, sev=p90        & Tons, sev=p75 \\   
+   Model:                       & (1)                   & (2)                   & (3)                   & (4)\\  
+   \midrule
+   \emph{Variables}\\
+   flood $\times$ exposed       & -0.0265$^{**}$        & -0.0231$^{**}$        & -0.0227$^{**}$        & -0.0852$^{***}$\\   
+                                & (0.0127)              & (0.0108)              & (0.0106)              & (0.0226)\\   
+   exposed $\times$ flood\_l1   & -0.0015               & -0.0035               & -0.0069               & -0.0147\\   
+                                & (0.0083)              & (0.0090)              & (0.0093)              & (0.0301)\\   
+   exposed $\times$ sev50       & 0.0213                &                       &                       &   \\   
+                                & (0.0196)              &                       &                       &   \\   
+   exposed $\times$ sev50\_l1   & -0.0028               &                       &                       &   \\   
+                                & (0.0156)              &                       &                       &   \\   
+   exposed $\times$ sev75       &                       & 0.0258                &                       & 0.0145\\   
+                                &                       & (0.0209)              &                       & (0.0420)\\   
+   exposed $\times$ sev75\_l1   &                       & 0.0033                &                       & -0.0225\\   
+                                &                       & (0.0157)              &                       & (0.0342)\\   
+   exposed $\times$ sev90       &                       &                       & 0.0677$^{*}$          &   \\   
+                                &                       &                       & (0.0395)              &   \\   
+   exposed $\times$ sev90\_l1   &                       &                       & 0.0712$^{*}$          &   \\   
+                                &                       &                       & (0.0408)              &   \\   
+   \midrule
+   \emph{Fixed-effects}\\
+   iso3-year                    & Yes                   & Yes                   & Yes                   & Yes\\  
+   chapter-year                 & Yes                   & Yes                   & Yes                   & Yes\\  
+   iso3-chapter                 & Yes                   & Yes                   & Yes                   & Yes\\  
+   \midrule
+   \emph{Fit statistics}\\
+   Observations                 & 514,312               & 514,312               & 514,312               & 513,963\\  
+   Squared Correlation          & 0.98962               & 0.98962               & 0.98962               & 0.98138\\  
+   Pseudo R$^2$                 & 0.99372               & 0.99372               & 0.99373               & 0.98979\\  
+   BIC                          & $1.63\times 10^{10}$  & $1.63\times 10^{10}$  & $1.63\times 10^{10}$  & $2.55\times 10^{10}$\\   
+   \midrule \midrule
+   \multicolumn{5}{l}{\emph{Clustered (iso3) standard-errors in parentheses}}\\
+   \multicolumn{5}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+\end{tabular}
+\par\endgroup
+
+
