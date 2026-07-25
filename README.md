@@ -4,14 +4,7 @@ Phase 1 of a research project on external shocks and trade; the longer
 run goal is to study armed conflict with UCDP data. This phase asks how
 four disaster types (floods, droughts, earthquakes, storms) change the
 composition of exports, using PPML on a completed exporter x HS-chapter
-x year panel covering 2001-2024. The cleaned data also contain
-wildfires and extreme temperature events, but the analysis leaves them
-out: no exposure map for them could be settled convincingly in advance.
-
-Author: Keven Pi. An end-to-end audit (July 2026) rebuilt the lags
-independently and compared them, checked the exposure maps against
-their spec, and confirmed that every reported number matches the saved
-model objects.
+x year panel covering 2001-2024. 
 
 ## Data (not included; ~11 GB)
 
@@ -21,8 +14,7 @@ model objects.
 2. EM-DAT: register at public.emdat.be, export Natural disasters
    1994-2024 (all countries) as .xlsx into data/raw/emdat/.
 
-## Pipeline (run in order)
-
+## Pipeline 
 | Script | Purpose |
 |---|---|
 | R/00_install_packages.R | dependencies |
