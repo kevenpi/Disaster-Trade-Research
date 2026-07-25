@@ -46,4 +46,3 @@ objects, so no reported number is typed by hand.
   with any static server, e.g. python3 -m http.server 8787)
 - output/results_auto.html - technical report
 - output/tables/*.tex - LaTeX tables
-- PLAN.md - running research log: findings, decisions, open items

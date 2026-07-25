@@ -17,7 +17,7 @@ dir.create("output/figures/apa", recursive = TRUE, showWarnings = FALSE)
 
 pctf  <- function(b) (exp(b) - 1) * 100
 starf <- function(p) ifelse(p < 0.001, "***", ifelse(p < 0.01, "**",
-                    ifelse(p < 0.05, "*", ifelse(p < 0.1, "†", ""))))
+                    ifelse(p < 0.05, "*", ifelse(p < 0.1, "+", ""))))
 
 get_row <- function(m, token) {
   ct <- coeftable(m)

@@ -176,10 +176,10 @@ const pct = b => (Math.exp(b)-1)*100;
 const fmtP = v => (v>0?"+":"−") + Math.abs(v).toFixed(1) + "%";
 function stars(p){
   if(p==null) return null;
-  if(p<0.001) return "***";
-  if(p<0.01)  return "**";
-  if(p<0.05)  return "*";
-  if(p<0.1)   return "†";
+  if(p<0.001) return "<sup>***</sup>";
+  if(p<0.01)  return "<sup>**</sup>";
+  if(p<0.05)  return "<sup>*</sup>";
+  if(p<0.1)   return "<sup>+</sup>";
   return "";
 }
 function cellHTML(c){
@@ -225,7 +225,7 @@ function disasterView(){
    errors in parentheses (percentage points). Severe (additional) denotes the
    further change, beyond the any-event estimate, when the event falls in the
    top severity quartile. *<i>p</i> &lt; .05. **<i>p</i> &lt; .01.
-   ***<i>p</i> &lt; .001. †<i>p</i> &lt; .10.</p>`;
+   ***<i>p</i> &lt; .001. +<i>p</i> &lt; .10.</p>`;
 }
 
 function productView(){
@@ -272,7 +272,7 @@ function productView(){
    the reference group (machinery and electronics) rather than growth in the
    sector shown; the evidence in this study suggests disasters fall hardest
    on complex manufacturing supply chains. *<i>p</i> &lt; .05.
-   **<i>p</i> &lt; .01. ***<i>p</i> &lt; .001. †<i>p</i> &lt; .10.</p>`;
+   **<i>p</i> &lt; .01. ***<i>p</i> &lt; .001. +<i>p</i> &lt; .10.</p>`;
 }
 
 function countryView(){
@@ -307,7 +307,7 @@ function countryView(){
    worst statistically significant effect on export value. Estimates for
    small economies rest on few trade flows and should be read with caution.
    *<i>p</i> &lt; .05. **<i>p</i> &lt; .01. ***<i>p</i> &lt; .001.
-   †<i>p</i> &lt; .10.</p>`+
+   +<i>p</i> &lt; .10.</p>`+
   '<p class="exhibit-label">Table 3</p>'+
   '<p class="exhibit-title">Severe disasters in exporting countries and '+
   'world prices of exposed products</p>'+
@@ -323,7 +323,7 @@ function countryView(){
    supply shock predicts: when a major producer is hit, scarcity raises the
    world price. Storms show none, consistent with their broad but diffuse
    footprint. *<i>p</i> &lt; .05. **<i>p</i> &lt; .01.
-   ***<i>p</i> &lt; .001. †<i>p</i> &lt; .10.</p>`;
+   ***<i>p</i> &lt; .001. +<i>p</i> &lt; .10.</p>`;
 }
 
 function methodView(){
