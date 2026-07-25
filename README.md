@@ -1,17 +1,17 @@
 # Natural Disasters and the Composition of Exports
 
-Phase 1 of a research project on external shocks and trade (with the
-longer-run goal of studying armed conflict via UCDP). Estimates how four
-natural disaster types (floods, droughts, earthquakes, storms) affect
-the composition of exports, using PPML on a completed exporter x
-HS-chapter x year panel, 2001-2024. Wildfires and extreme temperature
-events are present in the cleaned data but excluded from the analysis:
-no defensible ex-ante exposure map was settled for them.
+Phase 1 of a research project on external shocks and trade; the longer
+run goal is to study armed conflict with UCDP data. This phase asks how
+four disaster types (floods, droughts, earthquakes, storms) change the
+composition of exports, using PPML on a completed exporter x HS-chapter
+x year panel covering 2001-2024. The cleaned data also contain
+wildfires and extreme temperature events, but the analysis leaves them
+out: no exposure map for them could be settled convincingly in advance.
 
-Author: Keven Pi. The pipeline was audited end to end (July 2026):
-lag construction verified by independent recomputation, exposure maps
-checked against spec, and all reported numbers confirmed to match the
-saved model objects.
+Author: Keven Pi. An end-to-end audit (July 2026) rebuilt the lags
+independently and compared them, checked the exposure maps against
+their spec, and confirmed that every reported number matches the saved
+model objects.
 
 ## Data (not included; ~11 GB)
 
@@ -31,10 +31,10 @@ saved model objects.
 | R/03_clean_emdat.R | EM-DAT -> country x year x type; severe = top quartile within type by deaths or affected |
 | R/04_build_estimation_panel.R | merge; complete panel with true zeros; lags |
 | R/05-07 | flood-only models, severity robustness, insurance heterogeneity |
-| R/08_all_disasters.R | main matrix: 6 types x value/tons, dose spec |
+| R/08_all_disasters.R | main matrix: 4 types x value/tons, dose spec |
 | R/09_event_studies.R | leads/lags: anticipation test |
 | R/10_sector_scan.R | effects free by sector (exposure-map audit) |
-| R/11_joint_dose.R | all six types jointly (co-occurrence robustness) |
+| R/11_joint_dose.R | all four types jointly (co-occurrence robustness) |
 | R/12_results_report.R | auto-generated technical report |
 | R/13_export_explorer_data.R | JSON for the interactive appendix |
 | R/14_explorer_figures.R | APA figures (PNG) from saved models |
@@ -42,11 +42,11 @@ saved model objects.
 | R/16_price_leaders.R | world unit-value models; market-share leaders |
 
 Specification: fepois(y ~ dose terms x exposure | iso3^year +
-chapter^year + iso3^chapter), SEs clustered by exporter. Exposure maps
-in config/exposure_map.csv (fixed ex ante; see PLAN.md for the two maps
-still awaiting review). All fitted models are saved to output/models/
-as .rds; every table, figure, and web page regenerates from those
-objects, so no reported number is hand-transcribed.
+chapter^year + iso3^chapter), with standard errors clustered by
+exporter. The exposure maps live in config/exposure_map.csv and were
+fixed before estimation. Every fitted model is saved to output/models/
+as .rds, and every table, figure, and web page regenerates from those
+objects, so no reported number is typed by hand.
 
 ## Outputs
 
