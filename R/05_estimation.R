@@ -5,8 +5,11 @@
 #   including the disaster's overall effect on its exports. So beta on
 #   Disaster x Exposure is a RELATIVE effect: how much more exposed
 #   products fall than non-exposed products in the same country-year.
-#   Spec (M3) drops exporter-year FE to recover the overall effect -
-#   less well identified (country-year shocks confound), report both.
+#   An earlier M3 spec dropped exporter-year FE to chase the overall
+#   effect; it was removed (July 2026 audit): without iso3^year FE the
+#   estimate rides on ~10k all-zero exporter-years from countries that
+#   did not exist (SSD pre-2012 etc.), several disaster-flagged. Any
+#   total-export claim needs an existence-window panel first.
 
 library(data.table)
 library(arrow)
@@ -43,15 +46,6 @@ m2 <- fepois(
   data = panel, cluster = ~iso3
 )
 
-# --- M3: overall effect (no exporter-year FE) -------------------------------
-# Tests hypothesis 1 (disasters reduce total exports). Weaker
-# identification; year FE + exporter-chapter FE only.
-m3 <- fepois(
-  export_value ~ flood + flood_l1 + flood:exposed + flood_l1:exposed |
-    chapter^year + iso3^chapter,
-  data = panel, cluster = ~iso3
-)
-
 # --- M1s / M1d: severity-thresholded treatment ------------------------------
 # The any-flood dummy averages catastrophes with minor events -> attenuation.
 # M1s: severe floods only (top-quartile by deaths or affected).
@@ -69,13 +63,17 @@ m1d <- fepois(
   data = panel, cluster = ~iso3
 )
 
-etable(m1, m2, m3,
-       headers = c("Relative (theory map)", "By sector (data-driven)", "Overall + relative"),
+sig <- c("***" = 0.001, "**" = 0.01, "*" = 0.05, "+" = 0.1)
+
+etable(m1, m2,
+       headers = c("Relative (theory map)", "By sector (data-driven)"),
+       signif.code = sig,
        file = "output/tables/main_flood_ppml.tex", replace = TRUE)
 etable(m1, m1s, m1d,
        headers = c("Any flood", "Severe flood", "Both (dose)"),
+       signif.code = sig,
        file = "output/tables/severity_flood_ppml.tex", replace = TRUE)
-print(etable(m1, m1s, m1d, m3))
+print(etable(m1, m1s, m1d))
 message("--- M2: flood effect by sector group (vs machinery_electrical) ---")
 print(etable(m2))
 
@@ -99,7 +97,13 @@ m_es_sev <- fepois(
 )
 etable(m_es, m_es_sev,
        headers = c("Any flood", "Severe flood"),
+       signif.code = sig,
        file = "output/tables/event_study_flood.tex", replace = TRUE)
 print(etable(m_es, m_es_sev))
 
-message("Done. Tables in output/tables/.")
+dir.create("output/models", showWarnings = FALSE)
+saveRDS(list(m1 = m1, m2 = m2, m1s = m1s, m1d = m1d,
+             es_any = m_es, es_sev = m_es_sev),
+        "output/models/flood_models.rds")
+
+message("Done. Tables in output/tables/, models in output/models/flood_models.rds.")

@@ -1,7 +1,10 @@
 # Figures for the results explorer (output/explorer.html), APA style:
 # black and white, serif, generated from the fitted model objects.
-# Writes output/figures/apa/es_<type>.png            (6 event studies)
+# Writes output/figures/apa/es_<type>.png            (event studies, value)
+#        output/figures/apa/es_<type>_qty.png        (event studies, tons)
 #        output/figures/apa/sec_<sector>_<out>.png   (sector x value/qty)
+# Sector-chart stars/fills use Benjamini-Hochberg p adjusted within each
+# type x outcome scan (matching the website), not raw p.
 
 library(data.table)
 library(fixest)
@@ -29,42 +32,46 @@ get_row <- function(m, token) {
        p = unname(ct[hit, 4]))
 }
 
-# --- event studies ----------------------------------------------------------
+# --- event studies (value and tons) -----------------------------------------
 for (d in types) {
-  rows <- list(
-    any = lapply(c(paste0(d, "_dummy_lead1"), paste0(d, "_dummy"),
-                   paste0(d, "_dummy_lag1"), paste0(d, "_dummy_lag2")),
-                 function(tk) get_row(es_models[[paste0(d, "_any")]], tk)),
-    sev = lapply(c(paste0(d, "_severe_dummy_lead1"), paste0(d, "_severe_dummy"),
-                   paste0(d, "_severe_dummy_lag1"), paste0(d, "_severe_dummy_lag2")),
-                 function(tk) get_row(es_models[[paste0(d, "_sev")]], tk)))
-  b  <- lapply(rows, function(rr) sapply(rr, function(r) pctf(r$b)))
-  lo <- lapply(rows, function(rr) sapply(rr, function(r) pctf(r$b - 1.96 * r$se)))
-  hi <- lapply(rows, function(rr) sapply(rr, function(r) pctf(r$b + 1.96 * r$se)))
+  for (osfx in c("", "_qty")) {
+    rows <- list(
+      any = lapply(c(paste0(d, "_dummy_lead1"), paste0(d, "_dummy"),
+                     paste0(d, "_dummy_lag1"), paste0(d, "_dummy_lag2")),
+                   function(tk) get_row(es_models[[paste0(d, "_any", osfx)]], tk)),
+      sev = lapply(c(paste0(d, "_severe_dummy_lead1"), paste0(d, "_severe_dummy"),
+                     paste0(d, "_severe_dummy_lag1"), paste0(d, "_severe_dummy_lag2")),
+                   function(tk) get_row(es_models[[paste0(d, "_sev", osfx)]], tk)))
+    b  <- lapply(rows, function(rr) sapply(rr, function(r) pctf(r$b)))
+    lo <- lapply(rows, function(rr) sapply(rr, function(r) pctf(r$b - 1.96 * r$se)))
+    hi <- lapply(rows, function(rr) sapply(rr, function(r) pctf(r$b + 1.96 * r$se)))
 
-  png(sprintf("output/figures/apa/es_%s.png", d),
-      width = 1500, height = 700, res = 160)
-  par(mar = c(3.6, 4.4, 0.6, 0.6), family = "serif")
-  x <- 0:3
-  ylim <- range(0, unlist(lo), unlist(hi))
-  ylim <- ylim + c(-1, 1) * diff(ylim) * 0.06
-  plot(NA, xlim = c(-0.45, 3.45), ylim = ylim, axes = FALSE,
-       xlab = "", ylab = "Percent change, exposed products")
-  axis(1, at = x, labels = c("t - 1", "event year", "t + 1", "t + 2"),
-       padj = -0.4)
-  axis(2, las = 1)
-  box(bty = "l")
-  abline(h = 0, lty = 2, col = "grey40")
-  off <- 0.08
-  arrows(x - off, lo$any, x - off, hi$any, angle = 90, code = 3,
-         length = 0.035)
-  points(x - off, b$any, pch = 19, cex = 1.15)
-  arrows(x + off, lo$sev, x + off, hi$sev, angle = 90, code = 3,
-         length = 0.035)
-  points(x + off, b$sev, pch = 21, bg = "white", cex = 1.15)
-  legend("topright", c("Any event", "Severe event"), pch = c(19, 21),
-         pt.bg = "white", bty = "n", cex = 0.95)
-  dev.off()
+    png(sprintf("output/figures/apa/es_%s%s.png", d, osfx),
+        width = 1500, height = 700, res = 160)
+    par(mar = c(3.6, 4.4, 0.6, 0.6), family = "serif")
+    x <- 0:3
+    ylim <- range(0, unlist(lo), unlist(hi))
+    ylim <- ylim + c(-1, 1) * diff(ylim) * 0.06
+    plot(NA, xlim = c(-0.45, 3.45), ylim = ylim, axes = FALSE,
+         xlab = "",
+         ylab = sprintf("Percent change, exposed products (%s)",
+                        if (osfx == "") "value" else "tons"))
+    axis(1, at = x, labels = c("t - 1", "event year", "t + 1", "t + 2"),
+         padj = -0.4)
+    axis(2, las = 1)
+    box(bty = "l")
+    abline(h = 0, lty = 2, col = "grey40")
+    off <- 0.08
+    arrows(x - off, lo$any, x - off, hi$any, angle = 90, code = 3,
+           length = 0.035)
+    points(x - off, b$any, pch = 19, cex = 1.15)
+    arrows(x + off, lo$sev, x + off, hi$sev, angle = 90, code = 3,
+           length = 0.035)
+    points(x + off, b$sev, pch = 21, bg = "white", cex = 1.15)
+    legend("topright", c("Any event", "Severe event"), pch = c(19, 21),
+           pt.bg = "white", bty = "n", cex = 0.95)
+    dev.off()
+  }
 }
 message("event-study figures written")
 
@@ -75,13 +82,21 @@ sectors <- sort(unique(unlist(lapply(types, function(d) {
   sub(":.*$", "", sub("^sector_group::", "", rn))
 }))))
 
+# BH-adjusted p within each type x outcome scan (all sector x term cells)
+bh_map <- lapply(sector_models, function(m) {
+  ct <- coeftable(m)
+  rows <- rownames(ct)[grepl("^sector_group::", rownames(ct))]
+  setNames(p.adjust(ct[rows, 4], method = "BH"), rows)
+})
+
 for (s in sectors) {
   for (out in c("val", "qty")) {
     cells <- lapply(types, function(d) {
       ct <- coeftable(sector_models[[paste0(d, "_", out)]])
       rn <- sprintf("sector_group::%s:%s_dummy", s, d)
       if (!rn %in% rownames(ct)) return(NULL)
-      list(b = ct[rn, 1], se = ct[rn, 2], p = ct[rn, 4])
+      list(b = ct[rn, 1], se = ct[rn, 2],
+           p = unname(bh_map[[paste0(d, "_", out)]][rn]))
     })
     png(sprintf("output/figures/apa/sec_%s_%s.png", s, out),
         width = 1500, height = 760, res = 160)
@@ -95,7 +110,7 @@ for (s in sectors) {
     xlim <- range(0, l, h, na.rm = TRUE)
     xlim <- xlim + c(-1, 1) * diff(xlim) * 0.05
     plot(NA, xlim = xlim, ylim = c(0.4, n + 0.6), axes = FALSE,
-         xlab = "Percent change relative to machinery and electronics",
+         xlab = "Percent change relative to chemicals",
          ylab = "", mgp = c(2.3, 0.7, 0))
     axis(1)
     abline(v = 0, lty = 2, col = "grey40")

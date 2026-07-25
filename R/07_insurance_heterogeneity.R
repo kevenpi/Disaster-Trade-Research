@@ -2,7 +2,12 @@
 # (Kev's hypothesis.)
 #
 # Measure: World Bank GFDD.DI.10 - non-life insurance premiums / GDP
-# (source: Swiss Re sigma), country-year, through 2021.
+# (source: Swiss Re sigma), country-year; the series ends in 2020.
+# Disclosures for the writeup: the inner merge drops countries without
+# insurance data (incl. S19/Taiwan and IRQ, ~2.75% of export value);
+# severe-flood treatment is 503 low-ins vs 186 high-ins country-years;
+# "low insurance" includes CHN/IND/MEX/VNM, so this is an
+# insurance-depth split, not a poor-country split.
 # Countries are split at the cross-country median of their AVERAGE
 # penetration over the sample - a fixed grouping, so no country switches
 # groups mid-sample and the split can't respond to disasters themselves.
@@ -78,10 +83,15 @@ q_pool <- fepois(as.formula(paste(
   "flood_sev_l1:exposed + flood_sev_l1:exposed:high_ins |", fe)),
   panel, cluster = ~iso3)
 
+sig <- c("***" = 0.001, "**" = 0.01, "*" = 0.05, "+" = 0.1)
 etable(v_low, v_high, v_pool, q_low, q_high, q_pool,
        headers = c("Val LowIns", "Val HighIns", "Val pooled",
                    "Tons LowIns", "Tons HighIns", "Tons pooled"),
+       signif.code = sig,
        file = "output/tables/insurance_heterogeneity.tex", replace = TRUE)
+saveRDS(list(v_low = v_low, v_high = v_high, v_pool = v_pool,
+             q_low = q_low, q_high = q_high, q_pool = q_pool),
+        "output/models/insurance_models.rds")
 print(etable(v_low, v_high, v_pool, q_low, q_high, q_pool,
              headers = c("Val Low", "Val High", "Val pool",
                          "Ton Low", "Ton High", "Ton pool")))

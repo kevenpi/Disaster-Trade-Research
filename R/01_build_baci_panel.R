@@ -23,7 +23,11 @@ read_one_year <- function(f) {
   dt[, chapter := substr(k, 1, 2)]
   dt[, .(
     export_value  = sum(v),                    # thousand current USD
-    export_qty    = sum(q, na.rm = TRUE),      # metric tons (NA for some products)
+    # Tons are NA for some HS6 products. A cell where EVERY underlying
+    # quantity is missing must stay NA, not become a fake zero: value is
+    # positive there, so a zero would enter the tons models as a real
+    # collapse that never happened.
+    export_qty    = if (all(is.na(q))) NA_real_ else sum(q, na.rm = TRUE),
     n_products    = uniqueN(k),                # extensive margin: distinct HS6 exported
     n_destinations = uniqueN(j)                # extensive margin: distinct importers
   ), by = .(year = t, exporter_code = i, chapter)]

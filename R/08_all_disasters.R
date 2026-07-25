@@ -55,8 +55,9 @@ saveRDS(models, "output/models/matrix_models.rds")
 hdr <- as.vector(outer(c("$ ", "tons "), types, function(a, b) paste0(b, " ", a)))
 ord <- as.vector(rbind(paste0(types, "_val"), paste0(types, "_qty")))
 
+sig <- c("***" = 0.001, "**" = 0.01, "*" = 0.05, "+" = 0.1)
 etable(models[ord],
-       headers = as.list(hdr),
+       headers = hdr, signif.code = sig,
        file = "output/tables/all_disasters_ppml.tex", replace = TRUE)
 print(etable(models[ord]))
 

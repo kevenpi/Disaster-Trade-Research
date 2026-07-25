@@ -21,7 +21,14 @@ panel <- setDT(read_parquet("data/processed/estimation_panel.parquet"))
 emdat_file <- list.files("data/raw/emdat", pattern = "\\.xlsx$", full.names = TRUE)
 ed <- setDT(clean_names(read_excel(emdat_file)))
 ed <- ed[disaster_group == "Natural" & disaster_type == "Flood"]
+# Same filters as R/03, or the sev75 consistency check below fails:
+ed <- ed[is.na(end_year) | end_year >= start_year]
+ed <- ed[start_year >= 2000 & start_year <= 2024]
+ed[iso == "TWN", iso := "S19"]
 
+# Honest labels for these cutoffs: severity = deaths OR affected above
+# the quantile, so "sev50" flags well over half of floods (either
+# margin can trigger), sev75 roughly a third, sev90 the worst ~13%.
 for (p in c(50, 75, 90)) {
   dcut <- quantile(ed$total_deaths,   p / 100, na.rm = TRUE)
   acut <- quantile(ed$total_affected, p / 100, na.rm = TRUE)
@@ -69,10 +76,14 @@ names(m_thr) <- sevcols
 # --- A: quantity (tons) at the baseline cutoff ------------------------------
 m_qty <- fepois(dose("export_qty", "sev75"), data = panel, cluster = ~iso3)
 
+sig <- c("***" = 0.001, "**" = 0.01, "*" = 0.05, "+" = 0.1)
 etable(m_thr$sev50, m_thr$sev75, m_thr$sev90, m_qty,
        headers = c("Value, sev=p50", "Value, sev=p75", "Value, sev=p90",
                    "Tons, sev=p75"),
+       signif.code = sig,
        file = "output/tables/robustness_severity.tex", replace = TRUE)
+saveRDS(c(m_thr, list(qty_sev75 = m_qty)),
+        "output/models/severity_models.rds")
 print(etable(m_thr$sev50, m_thr$sev75, m_thr$sev90, m_qty,
              headers = c("Val p50", "Val p75", "Val p90", "Tons p75")))
 

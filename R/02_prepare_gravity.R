@@ -1,7 +1,8 @@
-# Slim the CEPII Gravity dataset (V202211, 1948-2020) down to the
-# variables we may use, saved as parquet.
-# Main spec doesn't need gravity (the FEs absorb it); this feeds the
-# companion bilateral/gravity specification and descriptive work.
+# Slim the CEPII Gravity dataset (V202211; the slimmed parquet spans
+# 1995-2021) down to the variables we may use, saved as parquet.
+# Main spec doesn't need gravity (the FEs absorb it) and NO current
+# script consumes gravity.parquet - kept for possible descriptive work
+# and the phase-2 bilateral design.
 
 library(data.table)
 library(arrow)

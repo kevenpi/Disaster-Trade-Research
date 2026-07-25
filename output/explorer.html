@@ -57,6 +57,8 @@
                  background:#fff;color:#000;cursor:pointer}
   .toggle button.on{background:#000;color:#fff}
   .sent{margin:.3rem 0 .3rem 2em}
+  details{margin:.6rem 0 1.2rem}
+  details summary{cursor:pointer;font-size:.92rem}
   footer{margin-top:2.5rem;font-size:.92rem}
   footer p{margin:.5rem 0;text-indent:2em}
   hr{border:0;border-top:1px solid #000;margin:2rem 0 1rem}
@@ -71,17 +73,18 @@
 </header>
 
 <div class="howto">
-  <p class="subtitle">This appendix reports estimates from a panel of 230
-  exporting countries observed from 2001 to 2024, combining CEPII BACI trade
-  flows with EM-DAT disaster records. Each estimate compares products exposed
-  to a disaster (for example, agricultural goods after a flood) with
-  unexposed products exported by the same country in the same year; this
-  within-country comparison absorbs all other national conditions in that
-  year. Value refers to export revenue in dollars, and quantity refers to
-  physical shipments in tons; when the two diverge, prices moved.
-  Significance is indicated in the conventional manner:
-  *<i>p</i> &lt; .05, **<i>p</i> &lt; .01, ***<i>p</i> &lt; .001, with
-  &dagger; marking estimates significant only at the 10 percent level.</p>
+  <p class="subtitle">This appendix reports estimates from a panel of
+  <span id="n-cty">231</span> exporting countries observed from 2001 to 2024,
+  combining CEPII BACI trade flows with EM-DAT disaster records. Each
+  estimate compares products exposed to a disaster (for example,
+  agricultural goods after a flood) with unexposed products exported by the
+  same country in the same year; this within-country comparison absorbs all
+  other national conditions in that year. Value refers to export revenue in
+  dollars, and quantity refers to physical shipments in tons; when the two
+  diverge, prices moved. Significance is indicated in the conventional
+  manner: *<i>p</i> &lt; .05, **<i>p</i> &lt; .01, ***<i>p</i> &lt; .001,
+  with +<i>p</i> &lt; .10 marking estimates significant only at the 10
+  percent level.</p>
 </div>
 
 <nav class="tabs">
@@ -99,17 +102,25 @@
   they indicate that exposed products performed differently from unexposed
   products within the same country and year, not the change in a country's
   total exports. In the product-sector view, estimates are measured against
-  machinery and electronics as the reference category, so a positive
-  estimate can reflect a decline in the reference group rather than growth
-  in the sector shown. Given the number of comparisons reported, isolated
-  estimates significant only at the 10 percent level should be discounted;
-  the conclusions of the study rest on estimates significant at the
-  0.1 percent level that survive robustness checks.</p>
-  <p><i>Method.</i> Poisson pseudo-maximum-likelihood (PPML) regressions
-  with exporter-year, product-year, and exporter-product fixed effects;
-  standard errors clustered by exporter. Severe events are those in the top
-  quartile of their disaster type by deaths or persons affected. This page
-  is generated directly from the fitted model objects.</p>
+  chemicals as the reference category, so a positive estimate can reflect a
+  decline in the reference group rather than growth in the sector shown.
+  Given the number of comparisons reported, isolated estimates significant
+  only at the 10 percent level should be discounted; the conclusions of the
+  study rest on estimates significant at the 0.1 percent level that survive
+  robustness checks, including a Bonferroni correction across all cells of
+  the main matrix.</p>
+  <p><i>Method.</i> Three estimators appear on this page, and each table
+  states its own. Table 1, the event studies, and the sector scan are
+  Poisson pseudo-maximum-likelihood (PPML) regressions on the full panel
+  with exporter-year, product-year, and exporter-product fixed effects and
+  standard errors clustered by exporter. Table 2 fits one PPML per country
+  with product and year effects; because the disaster indicator varies only
+  across years within a country, its standard errors are clustered by year
+  and headline entries also report a permutation test. Table 3 is ordinary
+  least squares on log world unit values at the product-year level with
+  product and year effects, clustered by product. Severe events are those
+  in the top quartile of their disaster type by deaths or persons affected.
+  This page is generated directly from the fitted model objects.</p>
 </footer>
 </div>
 
@@ -119,11 +130,49 @@ const D = window.DATA;
 const TYPES = ["flood","drought","earthquake","storm"];
 const TLAB = {flood:"Floods", drought:"Droughts", earthquake:"Earthquakes",
   storm:"Storms"};
+
+const pct = b => (Math.exp(b)-1)*100;
+const fmtP = v => (v>=0?"+":"−") + Math.abs(v).toFixed(1) + "%";
+const wpct = b => Math.abs(pct(b)).toFixed(0);   // whole-percent magnitude for prose
+
+/* Summaries computed from the fitted models so prose can't go stale.
+   For severe events the TOTAL effect is the any-event plus the severe
+   (additional) coefficient, since severe events also switch on the
+   any-event dummy. */
+function totalSevere(m, t){ return m.qty["s"+t].b + m.qty["t"+t].b; }
 const SUMMARY = {
-  flood: "Floods produce the clearest physical supply shock in the data. In the year of a flood, physical shipments of exposed agricultural products fall by roughly 8 percent relative to unexposed products, while export values fall by only about 2 percent: rising prices offset most of the physical decline in revenue terms. The pre-event coefficient is close to zero, indicating no movement before the flood.",
-  drought: "Drought effects arrive with a delay. Estimates for the drought year itself are modest, while physical shipments run roughly 18 percent lower in the following year, consistent with harvest losses transmitted through storage and contracting with a lag.",
-  earthquake: "Earthquake effects depend on severity. Ordinary earthquakes are associated with slightly higher exports of heavy manufactures, a pattern consistent with reconstruction activity. Severe earthquakes reduce physical shipments of heavy manufactures by roughly 18 percent in the event year and 14 percent in the following year, the largest sustained effect in the study.",
-  storm: "Ordinary storms show no measurable effect on relative export values in any product group; storm damage appears to be too broad-based to alter the composition of exports. Severe storms are followed by a delayed decline, and a small decline appears in the year before the event, consistent with storms being the one forecastable disaster type in the sample."
+  flood: m => "Floods produce the clearest physical supply shock in the "+
+    "data. In the year of a flood, physical shipments of exposed "+
+    "agricultural products fall by roughly "+wpct(m.qty.t0.b)+" percent "+
+    "relative to unexposed products, while export values fall by only "+
+    "about "+wpct(m.val.t0.b)+" percent: rising prices offset most of the "+
+    "physical decline in revenue terms. The pre-event estimate is close "+
+    "to zero, indicating no movement before the flood.",
+  drought: m => "Drought effects arrive with a delay. The estimate for "+
+    "the drought year itself is imprecise (a decline comparable to the "+
+    "flood effect in size, but not statistically distinguishable from "+
+    "zero), while physical shipments run roughly "+wpct(m.qty.t1.b)+
+    " percent lower in the following year, consistent with harvest "+
+    "losses transmitted through storage and contracting with a lag.",
+  earthquake: m => "Earthquake effects depend on severity. Ordinary "+
+    "earthquake years show slightly higher exports of heavy manufactures, "+
+    "but the event study finds the same elevation before the event as "+
+    "after it, so this pattern reads as a trend around earthquake-prone "+
+    "country-years rather than an effect of the quakes, and it is not "+
+    "treated as a finding. Severe earthquakes are different: total "+
+    "shipments of exposed manufactures fall by roughly "+
+    wpct(totalSevere(m,0))+" percent in the event year and "+
+    wpct(totalSevere(m,1))+" percent in the following year, the largest "+
+    "sustained decline in the study.",
+  storm: m => "Storms defied the original hypothesis, and the failure was "+
+    "instructive. Physical shipments of exposed products show no "+
+    "significant change in storm years, while export values show small "+
+    "positive estimates, so prices rather than volumes appear to move. "+
+    "Severe storms are followed by a delayed decline. A small dip also "+
+    "appears in the year before severe storms; because storms recur, the "+
+    "year before one storm is often the year after another, so this lead "+
+    "is suggestive at most (anticipation of forecast storms and echoes "+
+    "of earlier storms cannot be told apart)."
 };
 const SLAB = {
   animal_products:"Animal products (meat, fish, dairy)",
@@ -141,6 +190,7 @@ const SLAB = {
   stone_glass_ceramic:"Stone, glass, ceramics",
   gems_precious:"Gems and precious metals",
   base_metals:"Iron, steel, other base metals",
+  machinery_electrical:"Machinery and electronics",
   transport_equipment:"Vehicles, ships, aircraft",
   instruments:"Precision instruments",
   arms:"Arms and ammunition",
@@ -172,8 +222,6 @@ const SHS = {
   art_antiques:"HS 97"
 };
 
-const pct = b => (Math.exp(b)-1)*100;
-const fmtP = v => (v>0?"+":"−") + Math.abs(v).toFixed(1) + "%";
 function stars(p){
   if(p==null) return null;
   if(p<0.001) return "<sup>***</sup>";
@@ -182,11 +230,18 @@ function stars(p){
   if(p<0.1)   return "<sup>+</sup>";
   return "";
 }
-function cellHTML(c){
+/* pkey picks which p-value the stars use: raw ("p"), Benjamini-Hochberg
+   adjusted ("p_bh", sector scan), or permutation ("perm_p", country
+   models). Falls back to raw p when the adjusted value is absent.
+   The parenthetical is the delta-method standard error of the percent
+   effect: exp(b) * se * 100. */
+function cellHTML(c, pkey){
   if(!c) return '<span class="nil">.</span>';
-  const s=stars(c.p);
+  const pv=(pkey && c[pkey]!=null)?c[pkey]:c.p;
+  const s=stars(pv);
   const v=fmtP(pct(c.b))+s;
-  return '<span>'+v+'<span class="se">('+pct(c.se).toFixed(1)+')</span></span>';
+  const sePct=(Math.exp(c.b)*c.se*100).toFixed(1);
+  return '<span>'+v+'<span class="se">('+sePct+')</span></span>';
 }
 
 const state = {view:"disaster", type:"flood",
@@ -199,19 +254,31 @@ function disasterView(){
     TLAB[k]+'</button>').join("");
   return '<div class="chips" id="tchips">'+chips+'</div>'+
   '<h2>'+TLAB[t]+'</h2>'+
-  '<p class="stat">The sample contains '+c.any+
+  '<p class="stat">Over 2001–2024 the sample contains '+c.any+
   ' country-years with at least one event, of which '+c.severe+
   ' include a severe event (top quartile within type by deaths or persons affected).</p>'+
-  '<p class="body-p">'+SUMMARY[t]+'</p>'+
+  '<p class="body-p">'+SUMMARY[t](m)+'</p>'+
   '<p class="exhibit-label">Figure 1</p>'+
   '<p class="exhibit-title">Event-study estimates for '+TLAB[t].toLowerCase()+
   ': effect on export value of exposed products</p>'+
   '<div class="chartbox"><img src="figures/apa/es_'+t+
-  '.png" alt="Event-study estimates for '+TLAB[t]+'"></div>'+
+  '.png" alt="Event-study estimates for '+TLAB[t]+' (value)"></div>'+
+  '<p class="exhibit-label">Figure 2</p>'+
+  '<p class="exhibit-title">Event-study estimates for '+TLAB[t].toLowerCase()+
+  ': effect on physical quantity (tons) of exposed products</p>'+
+  '<div class="chartbox"><img src="figures/apa/es_'+t+
+  '_qty.png" alt="Event-study estimates for '+TLAB[t]+' (tons)"></div>'+
   `<p class="note"><i>Note.</i> Filled circles denote any event; open circles
    denote severe events. Whiskers give 95 percent confidence intervals. A
    pre-event estimate (t − 1) near zero indicates the change is
-   attributable to the disaster rather than to a prior trend.</p>`+
+   attributable to the disaster rather than to a prior trend; for
+   frequently recurring types (floods, storms) the pre-event year often
+   follows an earlier event, so the lead is a bounded check rather than a
+   pure placebo. Because of the lead and the second lag, the event-study
+   estimates draw on 2003–2023. The severe series here is estimated from
+   severe events alone, so it shows the TOTAL effect of a severe-event
+   year; in Table 1 the severe rows report the additional effect beyond
+   the any-event row.</p>`+
   '<p class="exhibit-label">Table 1</p>'+
   '<p class="exhibit-title">Estimated effects of '+TLAB[t].toLowerCase()+
   ' on exports of exposed products</p>'+
@@ -221,57 +288,65 @@ function disasterView(){
   '</td><td>'+cellHTML(m.val.s0)+'</td><td>'+cellHTML(m.val.s1)+'</td></tr>'+
   '<tr><td>Quantity (tons)</td><td>'+cellHTML(m.qty.t0)+'</td><td>'+cellHTML(m.qty.t1)+
   '</td><td>'+cellHTML(m.qty.s0)+'</td><td>'+cellHTML(m.qty.s1)+'</td></tr></tbody></table></div>'+
-  `<p class="note"><i>Note.</i> Cells report percentage effects with standard
-   errors in parentheses (percentage points). Severe (additional) denotes the
-   further change, beyond the any-event estimate, when the event falls in the
-   top severity quartile. *<i>p</i> &lt; .05. **<i>p</i> &lt; .01.
-   ***<i>p</i> &lt; .001. +<i>p</i> &lt; .10.</p>`;
+  `<p class="note"><i>Note.</i> Cells report percentage effects with
+   delta-method standard errors in parentheses (percentage points). Severe
+   (additional) denotes the further change, beyond the any-event estimate,
+   when the event falls in the top severity quartile; the total effect of a
+   severe-event year is the sum of the two coefficients. *<i>p</i> &lt; .05.
+   **<i>p</i> &lt; .01. ***<i>p</i> &lt; .001. +<i>p</i> &lt; .10.</p>`;
 }
 
 function productView(){
   const sec=state.sector,out=state.out;
   const opts=Object.keys(SLAB).map(k=>{
-    const has=TYPES.some(t=>D.sectors[t]&&D.sectors[t].val&&D.sectors[t].val[k]);
+    const has=TYPES.some(t=>D.sectors[t]&&D.sectors[t][out]&&D.sectors[t][out][k]);
     return has?'<option value="'+k+'"'+(k===sec?" selected":"")+'>'+SLAB[k]+
       ' ('+SHS[k]+')</option>':"";
   }).join("");
   let sentences=TYPES.map(t=>{
     const s=D.sectors[t]&&D.sectors[t][out]&&D.sectors[t][out][sec];
     if(!s||!s.t0) return "";
-    const s0=stars(s.t0.p), s1=s.t1?stars(s.t1.p):"";
+    const p0=(s.t0.p_bh!=null)?s.t0.p_bh:s.t0.p;
+    const p1=s.t1?((s.t1.p_bh!=null)?s.t1.p_bh:s.t1.p):null;
+    const s0=stars(p0), s1=p1==null?"":stars(p1);
     let bits=[];
     if(s0) bits.push(fmtP(pct(s.t0.b))+s0+" in the event year");
     if(s1) bits.push(fmtP(pct(s.t1.b))+s1+" in the following year");
     if(!bits.length) return "";
     return '<li class="sent">'+TLAB[t]+': '+bits.join("; ")+'.</li>';
   }).join("");
-  if(!sentences) sentences='<li class="sent nil">No statistically significant estimates for this sector.</li>';
+  if(!sentences) sentences='<li class="sent nil">No estimates for this sector survive the multiple-testing correction.</li>';
   return '<h2>Results by product sector</h2>'+
   '<p class="center"><select id="secsel">'+opts+'</select>'+
   '<span class="toggle"><button id="ov" class="'+(out==="val"?"on":"")+'">Value</button>'+
   '<button id="oq" class="'+(out==="qty"?"on":"")+'">Quantity</button></span></p>'+
-  '<p class="exhibit-label">Figure 2</p>'+
+  '<p class="exhibit-label">Figure 3</p>'+
   '<p class="exhibit-title">Estimated event-year effect of each disaster type on '+
   SLAB[sec].toLowerCase()+' ('+SHS[sec]+'; '+(out==="val"?"export value":"quantity")+')</p>'+
   '<div class="chartbox"><img src="figures/apa/sec_'+sec+'_'+out+
   '.png" alt="Sector estimates for '+SLAB[sec]+'"></div>'+
-  `<p class="note"><i>Note.</i> Estimates are measured relative to machinery
-   and electronics exports (HS 84&ndash;85) from the same country. Product
-   sectors are groups of chapters of the Harmonized System (HS), the
-   classification used in customs records worldwide. Black bars are significant
-   at the 5 percent level, gray bars at the 10 percent level, and light gray
-   bars are not statistically significant. Whiskers give 95 percent
-   confidence intervals.</p>`+
+  `<p class="note"><i>Note.</i> Estimates are measured relative to chemicals
+   exports (HS 28&ndash;38) from the same country, a sector outside every
+   exposure map used in the study. Product sectors are groups of chapters
+   of the Harmonized System (HS), the classification used in customs
+   records worldwide. This scan reports many estimates at once, so shading
+   reflects p-values adjusted for multiple testing within the scan
+   (Benjamini&ndash;Hochberg): black bars are significant at the adjusted
+   5 percent level, gray bars at the adjusted 10 percent level, and light
+   gray bars are not significant after adjustment. Whiskers give 95
+   percent confidence intervals.</p>`+
   '<p class="body-p">Leading exporters of this sector over the sample: '+
-  (D.leaders[sec]||[]).map(l=>l.name+' ('+l.share+' percent of world exports)').join(", ")+
+  (D.leaders[sec]||[]).map(l=>l.name+' ('+Number(l.share).toFixed(1)+' percent of world exports)').join(", ")+
   '. Disasters striking these countries carry the most weight for world '+
   'prices of these products; Table 3 in the country tab reports that '+
   'evidence.</p>'+
-  '<h3>Significant estimates</h3><ul>'+sentences+'</ul>'+
+  '<h3>Estimates surviving the multiple-testing correction</h3><ul>'+sentences+'</ul>'+
   `<p class="note"><i>Note.</i> A positive estimate can reflect a decline in
-   the reference group (machinery and electronics) rather than growth in the
-   sector shown; the evidence in this study suggests disasters fall hardest
-   on complex manufacturing supply chains. *<i>p</i> &lt; .05.
+   the reference group (chemicals) rather than growth in the sector shown,
+   so single cells should not be read in isolation; the informative object
+   is the pattern across sectors, and the scan's role in this study is to
+   check the exposure maps rather than to generate findings of its own.
+   Stars use Benjamini&ndash;Hochberg adjusted p-values: *<i>p</i> &lt; .05.
    **<i>p</i> &lt; .01. ***<i>p</i> &lt; .001. +<i>p</i> &lt; .10.</p>`;
 }
 
@@ -280,11 +355,14 @@ function countryView(){
   const chips=TYPES.map(t=>'<button data-t="'+t+'"'+(t===ct?' class="on"':"")+
     '>'+TLAB[t]+'</button>').join("");
   let trs=rows.map(r=>'<tr><td>'+r.name+'</td><td>'+r.n_ev+' ('+r.n_sev+')</td><td>'+
-    cellHTML(r.val.t0)+'</td><td>'+cellHTML(r.val.t1)+'</td><td>'+
-    cellHTML(r.qty.t0)+'</td><td>'+cellHTML(r.qty.t1)+'</td></tr>').join("");
+    cellHTML(r.val.t0,"perm_p")+'</td><td>'+cellHTML(r.val.t1,"perm_p")+'</td><td>'+
+    cellHTML(r.qty.t0,"perm_p")+'</td><td>'+cellHTML(r.qty.t1,"perm_p")+'</td></tr>').join("");
   if(!trs) trs='<tr><td colspan="6" class="nil">No countries met the '+
-    'estimation criteria for this disaster type.</td></tr>';
-  const sc=c=>({b:0.1*c.b, se:0.1*c.se, p:c.p});
+    'estimation and significance criteria for this disaster type.</td></tr>';
+  const all=(D.country_all&&D.country_all[ct])||[];
+  const alltrs=all.map(r=>'<tr><td>'+r.name+'</td><td>'+r.n_ev+'</td><td>'+
+    cellHTML(r.val.t0,"perm_p")+'</td><td>'+cellHTML(r.val.t1,"perm_p")+'</td></tr>').join("");
+  const sc=c=>c?{b:0.1*c.b, se:0.1*c.se, p:c.p}:null;
   const prows=TYPES.map(t=>{
     const p=D.price[t];
     return '<tr><td>'+TLAB[t]+'</td><td>'+cellHTML(sc(p.t0))+'</td><td>'+
@@ -302,12 +380,29 @@ function countryView(){
   `<p class="note"><i>Note.</i> Each row is a separate model for that country
    alone, using the same comparison as the rest of the study: exposed versus
    unexposed products within the country, with product and year effects held
-   constant. Only countries with at least six event years and six
-   disaster-free years are estimated, and the table ranks countries by their
-   worst statistically significant effect on export value. Estimates for
-   small economies rest on few trade flows and should be read with caution.
-   *<i>p</i> &lt; .05. **<i>p</i> &lt; .01. ***<i>p</i> &lt; .001.
-   +<i>p</i> &lt; .10.</p>`+
+   constant. Within one country the disaster indicator varies only across
+   years, so standard errors are clustered by year, and stars are based on a
+   permutation test that reshuffles event years within the country (200
+   draws). Eligibility requires at least six event years, six disaster-free
+   years, and 500 positive trade flows, and models that fail to converge are
+   dropped; the eligibility rule excludes the most frequently hit large
+   exporters (for floods: China, the United States, India, and others, which
+   lack six disaster-free years) as well as rarely hit small islands, and it
+   selects toward larger exporters. The table then keeps countries whose
+   value effect is negative and significant at the 10 percent permutation
+   level and ranks them by their worst coefficient; a rule that picks
+   extreme estimates, so the displayed magnitudes are biased away from zero
+   and should be read as ordering, not as precise sizes. Countries with
+   significant positive effects exist and appear in the full list below.
+   Estimates for small economies rest on few trade flows and should be read
+   with caution. *<i>p</i> &lt; .05. **<i>p</i> &lt; .01.
+   ***<i>p</i> &lt; .001. +<i>p</i> &lt; .10.</p>`+
+  '<details><summary>All estimated countries for this disaster type '+
+  '(value effects, no selection)</summary>'+
+  '<div class="tablewrap"><table><thead><tr><th>Country</th><th>Event years</th>'+
+  '<th>Value, year t</th><th>Value, year t + 1</th></tr></thead><tbody>'+
+  (alltrs||'<tr><td colspan="4" class="nil">.</td></tr>')+
+  '</tbody></table></div></details>'+
   '<p class="exhibit-label">Table 3</p>'+
   '<p class="exhibit-title">Severe disasters in exporting countries and '+
   'world prices of exposed products</p>'+
@@ -315,39 +410,51 @@ function countryView(){
   '<th>World price, year t</th><th>World price, year t + 1</th></tr></thead>'+
   '<tbody>'+prows+'</tbody></table></div>'+
   `<p class="note"><i>Note.</i> The outcome is the world unit value (dollars
-   per ton) of the product chapters exposed to each disaster type. The
-   entries give the estimated percent change in the world price when severe
-   events strike exporters that together hold 10 percent of the world market
-   for that product, with chapter and year effects held constant. Droughts
-   show a clear price response, and floods a marginal one, which is what a
-   supply shock predicts: when a major producer is hit, scarcity raises the
-   world price. Storms show none, consistent with their broad but diffuse
-   footprint. *<i>p</i> &lt; .05. **<i>p</i> &lt; .01.
-   ***<i>p</i> &lt; .001. +<i>p</i> &lt; .10.</p>`;
+   per ton) of the product chapters exposed to each disaster type, estimated
+   by ordinary least squares on the log unit value with chapter and year
+   effects, standard errors clustered by chapter. The entries give the
+   estimated percent change in the world price when severe events strike
+   exporters that together hold 10 percent of the world market for that
+   product. A price rise after supply-side disasters is what a supply shock
+   predicts: when a major producer is hit, scarcity raises the world price.
+   Two caveats: market shares are pooled over the sample, so they are not
+   immune to disasters themselves, and unit values mix true prices with
+   composition changes within chapters. *<i>p</i> &lt; .05.
+   **<i>p</i> &lt; .01. ***<i>p</i> &lt; .001. +<i>p</i> &lt; .10.</p>`;
 }
 
 function methodView(){
+  const f=D.matrix.flood, dr=D.matrix.drought, eq=D.matrix.earthquake;
+  const jf=D.joint?D.joint.flood:null;
+  const nCty=(D.country_all?TYPES.reduce((a,t)=>a+(D.country_all[t]||[]).length,0):0);
+  const cnum=n=>Number(n).toLocaleString("en-US");
   return `<h2>Procedure, models, and hypotheses</h2>
 
   <h3>Data and construction of the panel</h3>
   <p class="body-p">Trade flows come from the CEPII BACI database, built from
   United Nations customs records. Flows are aggregated to the level of the
-  exporting country, the product chapter, and the year, giving a panel of 230
-  exporters, 97 product chapters, and the years 2001 to 2024. Products are
-  classified by the two-digit chapters of the Harmonized System (HS), the
-  scheme used by customs authorities worldwide; chapter 10 is cereals, for
-  example, and chapter 85 is electrical machinery. Two outcomes are observed
-  for every flow: export value in current dollars and physical quantity in
-  tons. Disaster records come from EM-DAT, the international disaster
-  database maintained at UCLouvain. The analysis covers the four types that
-  combine frequent occurrence with a defensible exposure definition:
-  floods (1,922 country-years with at least one event, of which 743 severe),
-  storms (1,137; 368), droughts (380; 77), and earthquakes (361; 132). An
-  event is classed as severe when it falls in the top quartile of its own
-  type by deaths or by persons affected. Wildfires and extreme temperature
-  events are recorded in the data as well but are excluded from the
-  analysis, because which products they should harm could not be settled
-  convincingly in advance.</p>
+  exporting country, the product chapter, and the year, giving a panel of
+  ${D.n_countries||231} exporters, ${D.n_chapters||96} product chapters, and
+  the years 2001 to 2024. Products are classified by the two-digit chapters
+  of the Harmonized System (HS), the scheme used by customs authorities
+  worldwide; chapter 10 is cereals, for example, and chapter 85 is
+  electrical machinery. Two outcomes are observed for every flow: export
+  value in current dollars and physical quantity in tons. Disaster records
+  come from EM-DAT, the international disaster database maintained at
+  UCLouvain. The analysis covers four types:
+  floods (${cnum(D.counts.flood.any)} country-years with at least one
+  event, of which ${cnum(D.counts.flood.severe)} severe),
+  storms (${cnum(D.counts.storm.any)}; ${cnum(D.counts.storm.severe)}),
+  droughts (${cnum(D.counts.drought.any)}; ${cnum(D.counts.drought.severe)}),
+  and earthquakes (${cnum(D.counts.earthquake.any)};
+  ${cnum(D.counts.earthquake.severe)}). An event is classed as severe when
+  it falls in the top quartile of its own type by deaths or by persons
+  affected. Wildfires and extreme temperature events are recorded in the
+  data as well but are not part of the analysis: no exposure map for them
+  was fixed in advance, and exploratory estimates for those types were set
+  aside rather than reported. That exclusion is a scoping decision taken
+  during the analysis, not part of the original design, and results for
+  both types are available on request.</p>
 
   <h3>Procedure</h3>
   <p class="body-p">The design rests on a simple comparison: after a
@@ -365,45 +472,53 @@ function methodView(){
   sector freely, which serves as a check on the choices.</p>
 
   <h3>The statistical model</h3>
-  <p class="body-p">All estimates come from Poisson pseudo-maximum-likelihood
-  (PPML) regressions, the standard method for trade flows because it handles
-  the many zero flows in the data and models effects in proportional terms.
-  Every regression includes three sets of fixed effects, each of which holds
-  a family of confounders constant. Exporter-by-year effects absorb anything
-  that hits a whole country in a year, such as a recession, a currency
-  movement, a political crisis, or the disaster's effect on the economy as a
-  whole. Chapter-by-year effects absorb anything that hits a product
-  worldwide in a year, such as commodity price swings or shifts in global
-  demand. Exporter-by-chapter effects absorb each country's long-run
-  specialization, so that a country is only ever compared with itself. What
-  remains is the question of interest: whether exposed products deviated
-  from their own norm, relative to unexposed products, precisely when a
-  disaster struck. Standard errors are clustered by exporter, which allows
-  the errors of a given country to be correlated across products and over
-  time. Reported percentages convert the raw coefficients through the
+  <p class="body-p">The core estimates come from Poisson
+  pseudo-maximum-likelihood (PPML) regressions, the standard method for
+  trade flows because it handles the many zero flows in the data and models
+  effects in proportional terms. The pooled regressions include three sets
+  of fixed effects, each of which holds a family of confounders constant.
+  Exporter-by-year effects absorb anything that hits a whole country in a
+  year, such as a recession, a currency movement, a political crisis, or
+  the disaster's effect on the economy as a whole. Chapter-by-year effects
+  absorb anything that hits a product worldwide in a year, such as
+  commodity price swings or shifts in global demand. Exporter-by-chapter
+  effects absorb each country's long-run specialization, so that a country
+  is only ever compared with itself. What remains is the question of
+  interest: whether exposed products deviated from their own norm, relative
+  to unexposed products, precisely when a disaster struck. Standard errors
+  in the pooled models are clustered by exporter, which allows the errors
+  of a given country to be correlated across products and over time; the
+  country-level and world-price models use different fixed effects,
+  clustering, and (for prices) a different estimator, stated in their table
+  notes. Reported percentages convert the raw coefficients through the
   exponential, so they read as proportional changes.</p>
 
   <h3>The models estimated</h3>
-  <p class="body-p">The main analysis consists of twenty-six regressions
-  fitted in four groups, and every number on this page is generated from the
-  saved model objects rather than transcribed by hand. First, a baseline model for each disaster type
-  and each outcome (value and tons; eight models) with four terms: an
-  any-event indicator, a severe-event indicator capturing the additional
-  effect of severe events, and one-year lags of both. Second, event-study
-  models (eight) that add a lead term, dated one year before the event, and
-  extend the lags to two years after. The lead is a placebo: exports cannot
-  respond to a disaster that has not happened, so a nonzero lead would
-  signal a pre-existing trend and undermine the design. Third, a joint model
-  (value and tons) entering all four disaster types at once, because
+  <p class="body-p">The main analysis consists of thirty-four regressions
+  fitted in four groups, and every number on this page is generated from
+  the saved model objects rather than transcribed by hand. First, a
+  baseline model for each disaster type and each outcome (value and tons;
+  eight models) with four terms: an any-event indicator, a severe-event
+  indicator capturing the additional effect of severe events, and one-year
+  lags of both. Second, event-study models (sixteen: both outcomes) that
+  add a lead term, dated one year before the event, and extend the lags to
+  two years after. The lead is a check: exports cannot respond to a
+  disaster that has not happened, so a large lead would signal a
+  pre-existing trend and undermine the design. For types that recur
+  frequently the lead year often follows an earlier event, so the lead
+  bounds pre-trends rather than isolating anticipation. Third, a joint
+  model (value and tons) entering all four disaster types at once, because
   disasters co-occur; storms cause floods, and a type estimated alone could
   borrow its neighbor's effect. Fourth, the sector scan (eight), which
-  estimates a free effect for every product sector relative to machinery
-  and electronics.</p>
+  estimates a free effect for every product sector relative to chemicals,
+  a sector outside every exposure map.</p>
   <p class="body-p">Two further groups extend the analysis. Country-level
   models repeat the within-country comparison one country at a time, for
   every country with at least six event years and six disaster-free years
-  of a given type (354 models); these identify which countries lose the
-  most, reported in the country tab. Finally, four price models ask whether
+  of a given type (${nCty?nCty+" country-type pairs, two outcomes each":
+  "one model per eligible country, type, and outcome"}); these identify
+  which countries lose the most, reported in the country tab with
+  permutation-based inference. Finally, four price models ask whether
   severe disasters in exporting countries move world prices: the outcome is
   the world unit value, in dollars per ton, of each exposed product
   chapter, and the regressor weights each country's severe events by its
@@ -412,45 +527,56 @@ function methodView(){
 
   <h3>Hypotheses and what the results did to them</h3>
   <p class="body-p">The study began from three expectations. The first was
-  that disasters reduce exports of exposed products. This is supported, with
-  the sharpest evidence for floods: exposed products lose 8.2 percent of
-  physical volume in the event year, an estimate significant at the 0.1
-  percent level that is essentially unchanged (8.3 percent) when all four
-  disaster types are controlled jointly. Droughts show the same pattern with
-  a delay, a 17.8 percent fall in tons the year after the event, consistent
-  with harvests that fail after the drought is recorded. Severe earthquakes
-  cut exposed manufacturing volumes by roughly 18 percent.</p>
+  that disasters reduce exports of exposed products. This is supported,
+  with the sharpest evidence for floods: exposed products lose
+  ${Math.abs(pct(f.qty.t0.b)).toFixed(1)} percent of physical volume in the
+  event year, an estimate significant at the 0.1 percent level, essentially
+  unchanged ${jf?"("+Math.abs(pct(jf.qty.t0.b)).toFixed(1)+" percent) ":""}when
+  all four disaster types are controlled jointly, and strong enough to
+  survive a Bonferroni correction across all forty-eight estimates of the
+  main matrix. Droughts show the same pattern with a delay, a
+  ${Math.abs(pct(dr.qty.t1.b)).toFixed(1)} percent fall in tons the year
+  after the event, consistent with harvests that fail after the drought is
+  recorded. Severe earthquakes cut exposed manufacturing volumes by roughly
+  ${wpct(eq.qty.t0.b+eq.qty.s0.b)} percent in total in the event year
+  (the sum of the any-event and severe terms; the year-after estimate is
+  less robust to alternative clustering and is not leaned on).</p>
   <p class="body-p">The second expectation was that physical quantities
   would fall by more than dollar values, because scarcity raises prices and
   partially protects revenue. The flood estimates bear this out directly:
-  the 8.2 percent fall in tons coincides with only a 2.3 percent fall in
-  value. The gap between the two is informative; it is the fingerprint of a
-  supply shock rather than a demand shock. The world price models close the
-  loop from the other side: severe droughts striking exporters that hold 10
-  percent of a product's world market raise its world price by roughly 7.5
-  percent, with a marginal effect of about 2.3 percent for floods, exactly
-  where the supply-shock account predicts prices should move.</p>
+  the ${Math.abs(pct(f.qty.t0.b)).toFixed(1)} percent fall in tons
+  coincides with only a ${Math.abs(pct(f.val.t0.b)).toFixed(1)} percent
+  fall in value. The gap between the two is informative; it is the
+  fingerprint of a supply shock rather than a demand shock. The world price
+  models close the loop from the other side: severe droughts striking
+  exporters that hold 10 percent of a product's world market raise its
+  world price by roughly ${wpct(0.1*D.price.drought.t0.b)} percent, with a
+  marginal effect of about ${wpct(0.1*D.price.flood.t0.b)} percent for
+  floods, exactly where the supply-shock account predicts prices should
+  move.</p>
   <p class="body-p">The third expectation, that storms would mirror floods,
-  failed, and the failure was instructive. Storm coefficients on value are
-  small and insignificant in the event year, and the sector scan shows no
-  sector with a significant year-of decline in value, so the null is not an
-  artifact of a badly drawn exposure map. The storm hypothesis was revised
-  rather than rescued: storm damage appears broad rather than concentrated
-  in agriculture, with the clearest effect being a delayed decline after
-  severe storms. Severe storms are also the one case with a nonzero lead,
-  which has a natural reading: hurricanes are forecast, and behavior can
-  change before landfall.</p>
-  <p class="body-p">Two results were not anticipated. Ordinary earthquakes
-  are followed by a rise of about 9.5 percent in exposed-product tons, which
-  severe earthquakes reverse into the large decline noted above; one
-  reading is that moderate earthquakes leave capacity intact while
-  reconstruction stimulates activity, but this remains unsettled. In the
-  sector scan, apparent gains for textiles, leather, and footwear after
-  several disaster types most likely reflect the reference category falling
-  rather than those sectors rising, since every sector is measured against
-  machinery and electronics, the sector with the most fragile supply
-  chains. Confirming that reading with a specification that does not rely
-  on a reference sector is a planned next step.</p>`;
+  failed, and the failure was instructive. Storm effects on physical
+  volumes are null, while storm-year estimates on value are small and
+  positive, and no sector shows a decline that survives the
+  multiple-testing correction in the scan, so the null is not an artifact
+  of a badly drawn exposure map. The storm hypothesis was revised rather
+  than rescued: storm damage appears broad rather than concentrated in
+  agriculture, with the clearest effect being a delayed decline after
+  severe storms. Severe storms also show a nonzero lead. A tempting reading
+  is anticipation (hurricanes are forecast, and behavior can change before
+  landfall), but storms recur often enough that the lead year frequently
+  follows an earlier storm, and the two stories cannot be separated in
+  these data, so the lead is reported without a causal label.</p>
+  <p class="body-p">One pattern deserves an explicit non-claim. Ordinary
+  earthquake years are associated with slightly elevated exposed-product
+  tons, but the elevation is present before the event as well as after it
+  and shrinks under country-specific trends, so it is read as a trend
+  around earthquake-prone country-years, not an effect of earthquakes.
+  In the sector scan, apparent gains for some sectors after droughts most
+  likely reflect movements in the reference and in agriculture rather
+  than genuine booms, since every sector is measured against a single
+  reference group. Confirming these readings with a specification that
+  does not rely on a reference sector is a planned next step.</p>`;
 }
 
 function render(){
@@ -478,6 +604,7 @@ document.getElementById("tab-disaster").onclick=()=>{state.view="disaster";rende
 document.getElementById("tab-product").onclick=()=>{state.view="product";render();};
 document.getElementById("tab-country").onclick=()=>{state.view="country";render();};
 document.getElementById("tab-method").onclick=()=>{state.view="method";render();};
+if(D.n_countries) document.getElementById("n-cty").textContent=D.n_countries;
 render();
 </script>
 </body>

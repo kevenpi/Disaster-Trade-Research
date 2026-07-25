@@ -1,8 +1,16 @@
 # Clean EM-DAT into a country x year x disaster-type panel.
 #
-# BLOCKED until Kev downloads the export: register at public.emdat.be,
-# then Access Data tab -> filter: Natural disasters, 1994-2024, all
-# countries -> download .xlsx into data/raw/emdat/.
+# Input: the public EM-DAT export (register at public.emdat.be, Access
+# Data tab -> Natural disasters, all countries -> .xlsx into
+# data/raw/emdat/). The current extract spans 2000-2026; this script
+# filters to 2000-2024 (2000 is kept only to feed 2001's lag) BEFORE
+# computing severity cutoffs, so partial recent years cannot shift the
+# quantiles.
+#
+# Events are assigned to their START year. 164/424 droughts span more
+# than one year, so continuing-drought years sit in the control group;
+# a start-year assignment is conservative for slow-onset types. (Ledger
+# item: an all-years robustness assignment is a possible extension.)
 #
 # Column names below match the current public EM-DAT export format;
 # the stopifnot() will catch it immediately if their format changed.
@@ -17,7 +25,7 @@ stopifnot("Put the EM-DAT .xlsx export in data/raw/emdat/ first" = length(emdat_
 
 ed <- setDT(clean_names(read_excel(emdat_file)))
 
-needed <- c("iso", "start_year", "disaster_group", "disaster_type",
+needed <- c("iso", "start_year", "end_year", "disaster_group", "disaster_type",
             "total_deaths", "total_affected",
             "total_damage_adjusted_000_us")
 missing_cols <- setdiff(needed, names(ed))
@@ -25,6 +33,21 @@ stopifnot("EM-DAT column names changed - inspect and update this script" =
             length(missing_cols) == 0)
 
 ed <- ed[disaster_group == "Natural"]
+
+# Sanity: drop corrupt rows (e.g. 1988-0424-VEN has start_year=2026,
+# end_year=1988), then restrict to the analysis window BEFORE severity
+# quantiles are computed. 2025-26 are partial years; 2000 stays only so
+# 2001 gets a lag.
+ed <- ed[is.na(end_year) | end_year >= start_year]
+ed <- ed[start_year >= 2000 & start_year <= 2024]
+
+# Taiwan: EM-DAT codes it TWN, but BACI reports its trade under the
+# pseudo-ISO S19 ("Other Asia, nes"). Without this recode all Taiwanese
+# disasters silently drop in the merge and the #11 exporter shows zero
+# events. Not recoded (documented limitation): PRI/VIR trade folds under
+# USA, REU/GLP/MTQ/GUF/MAF under FRA, Canary Is. under ESP, so ~11
+# EM-DAT territory codes never merge to trade.
+ed[iso == "TWN", iso := "S19"]
 
 # The four types we study, matching the exposure-map columns
 type_map <- c("Flood" = "flood", "Drought" = "drought",

@@ -1,8 +1,8 @@
-# Joint specification: all six disaster types in ONE regression.
+# Joint specification: all four disaster types in ONE regression.
 # Robustness for co-occurrence — storms cause floods and EM-DAT codes the
 # proximate type, so the one-type-at-a-time matrix (R/08) partly double
 # counts shared years. Here each type's dose terms compete for the same
-# variation; coefficients are conditional on the other five types.
+# variation; coefficients are conditional on the other three types.
 
 library(data.table)
 library(arrow)
@@ -30,7 +30,8 @@ message("joint models estimated")
 dir.create("output/models", showWarnings = FALSE)
 saveRDS(models, "output/models/joint_models.rds")
 
-etable(models, headers = list("$ value", "tons"),
+sig <- c("***" = 0.001, "**" = 0.01, "*" = 0.05, "+" = 0.1)
+etable(models, headers = c("$ value", "tons"), signif.code = sig,
        file = "output/tables/joint_all_types.tex", replace = TRUE)
 print(etable(models))
 message("Done. Table: output/tables/joint_all_types.tex")

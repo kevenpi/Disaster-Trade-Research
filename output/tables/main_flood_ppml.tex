@@ -1,115 +1,111 @@
 
 \begingroup
 \centering
-\begin{tabular}{lccc}
+\begin{tabular}{lcc}
    \tabularnewline \midrule \midrule
-   Dependent Variable: & \multicolumn{3}{c}{export\_value}\\
-                                                                   & Relative (theory map) & By sector (data-driven) & Overall + relative \\   
-   Model:                                                          & (1)                   & (2)                     & (3)\\  
+   Dependent Variable: & \multicolumn{2}{c}{export\_value}\\
+                                                                   & Relative (theory map) & By sector (data-driven) \\   
+   Model:                                                          & (1)                   & (2)\\  
    \midrule
    \emph{Variables}\\
-   exposed $\times$ flood                                          & -0.0188$^{*}$         &                         & -0.0167\\   
-                                                                   & (0.0099)              &                         & (0.0127)\\   
-   exposed $\times$ flood\_l1                                      & -0.0033               &                         & -0.0010\\   
-                                                                   & (0.0087)              &                         & (0.0126)\\   
-   flood $\times$ sector\_group $=$ animal\_products               &                       & -0.0014                 &   \\   
-                                                                   &                       & (0.0167)                &   \\   
-   flood $\times$ sector\_group $=$ arms                           &                       & -0.0146                 &   \\   
-                                                                   &                       & (0.0621)                &   \\   
-   flood $\times$ sector\_group $=$ art\_antiques                  &                       & 0.0149                  &   \\   
-                                                                   &                       & (0.0688)                &   \\   
-   flood $\times$ sector\_group $=$ base\_metals                   &                       & 0.0021                  &   \\   
-                                                                   &                       & (0.0127)                &   \\   
-   flood $\times$ sector\_group $=$ chemicals                      &                       & 0.0120                  &   \\   
-                                                                   &                       & (0.0195)                &   \\   
-   flood $\times$ sector\_group $=$ fats\_oils                     &                       & -0.0360                 &   \\   
-                                                                   &                       & (0.0301)                &   \\   
-   flood $\times$ sector\_group $=$ food\_bev\_tobacco             &                       & -0.0066                 &   \\   
-                                                                   &                       & (0.0115)                &   \\   
-   flood $\times$ sector\_group $=$ footwear\_headgear             &                       & 0.0518$^{**}$           &   \\   
-                                                                   &                       & (0.0237)                &   \\   
-   flood $\times$ sector\_group $=$ gems\_precious                 &                       & -0.0184                 &   \\   
-                                                                   &                       & (0.0399)                &   \\   
-   flood $\times$ sector\_group $=$ instruments                    &                       & -0.0413$^{*}$           &   \\   
-                                                                   &                       & (0.0228)                &   \\   
-   flood $\times$ sector\_group $=$ leather\_fur                   &                       & 0.0885$^{**}$           &   \\   
-                                                                   &                       & (0.0381)                &   \\   
-   flood $\times$ sector\_group $=$ minerals\_fuels                &                       & 0.0258                  &   \\   
-                                                                   &                       & (0.0187)                &   \\   
-   flood $\times$ sector\_group $=$ misc\_manufactures             &                       & -0.0204$^{*}$           &   \\   
-                                                                   &                       & (0.0116)                &   \\   
-   flood $\times$ sector\_group $=$ paper\_print                   &                       & 0.0132                  &   \\   
-                                                                   &                       & (0.0113)                &   \\   
-   flood $\times$ sector\_group $=$ plastics\_rubber               &                       & -0.0125                 &   \\   
-                                                                   &                       & (0.0115)                &   \\   
-   flood $\times$ sector\_group $=$ stone\_glass\_ceramic          &                       & -0.0056                 &   \\   
-                                                                   &                       & (0.0153)                &   \\   
-   flood $\times$ sector\_group $=$ textiles\_apparel              &                       & 0.0393$^{***}$          &   \\   
-                                                                   &                       & (0.0128)                &   \\   
-   flood $\times$ sector\_group $=$ transport\_equipment           &                       & -0.0186$^{*}$           &   \\   
-                                                                   &                       & (0.0101)                &   \\   
-   flood $\times$ sector\_group $=$ vegetable\_products            &                       & -0.0329$^{**}$          &   \\   
-                                                                   &                       & (0.0160)                &   \\   
-   flood $\times$ sector\_group $=$ wood\_products                 &                       & 0.0112                  &   \\   
-                                                                   &                       & (0.0151)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ animal\_products           &                       & 0.0043                  &   \\   
-                                                                   &                       & (0.0172)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ arms                       &                       & 0.0260                  &   \\   
-                                                                   &                       & (0.0960)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ art\_antiques              &                       & 0.0885                  &   \\   
-                                                                   &                       & (0.0549)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ base\_metals               &                       & 0.0100                  &   \\   
-                                                                   &                       & (0.0101)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ chemicals                  &                       & 0.0150                  &   \\   
-                                                                   &                       & (0.0167)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ fats\_oils                 &                       & -0.0454                 &   \\   
-                                                                   &                       & (0.0348)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ food\_bev\_tobacco         &                       & 0.0138                  &   \\   
-                                                                   &                       & (0.0116)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ footwear\_headgear         &                       & 0.0548                  &   \\   
-                                                                   &                       & (0.0412)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ gems\_precious             &                       & -0.0069                 &   \\   
-                                                                   &                       & (0.0296)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ instruments                &                       & -0.0096                 &   \\   
-                                                                   &                       & (0.0160)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ leather\_fur               &                       & 0.1000$^{*}$            &   \\   
-                                                                   &                       & (0.0550)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ minerals\_fuels            &                       & 0.0267                  &   \\   
-                                                                   &                       & (0.0180)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ misc\_manufactures         &                       & -0.0153                 &   \\   
-                                                                   &                       & (0.0142)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ paper\_print               &                       & 0.0071                  &   \\   
-                                                                   &                       & (0.0132)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ plastics\_rubber           &                       & -0.0106                 &   \\   
-                                                                   &                       & (0.0100)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ stone\_glass\_ceramic      &                       & 0.0047                  &   \\   
-                                                                   &                       & (0.0135)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ textiles\_apparel          &                       & 0.0405$^{**}$           &   \\   
-                                                                   &                       & (0.0163)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ transport\_equipment       &                       & -0.0192                 &   \\   
-                                                                   &                       & (0.0122)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ vegetable\_products        &                       & -0.0010                 &   \\   
-                                                                   &                       & (0.0147)                &   \\   
-   flood\_l1 $\times$ sector\_group $=$ wood\_products             &                       & -0.0069                 &   \\   
-                                                                   &                       & (0.0165)                &   \\   
-   flood                                                           &                       &                         & -0.0067\\   
-                                                                   &                       &                         & (0.0171)\\   
-   flood\_l1                                                       &                       &                         & -0.0081\\   
-                                                                   &                       &                         & (0.0186)\\   
+   flood $\times$ exposed                                          & -0.0184$^{+}$         &   \\   
+                                                                   & (0.0099)              &   \\   
+   exposed $\times$ flood\_l1                                      & -0.0031               &   \\   
+                                                                   & (0.0087)              &   \\   
+   flood $\times$ sector\_group $=$ animal\_products               &                       & 0.0068\\   
+                                                                   &                       & (0.0181)\\   
+   flood $\times$ sector\_group $=$ arms                           &                       & -0.0085\\   
+                                                                   &                       & (0.0610)\\   
+   flood $\times$ sector\_group $=$ art\_antiques                  &                       & 0.0187\\   
+                                                                   &                       & (0.0685)\\   
+   flood $\times$ sector\_group $=$ base\_metals                   &                       & 0.0112\\   
+                                                                   &                       & (0.0153)\\   
+   flood $\times$ sector\_group $=$ chemicals                      &                       & 0.0197\\   
+                                                                   &                       & (0.0204)\\   
+   flood $\times$ sector\_group $=$ fats\_oils                     &                       & -0.0294\\   
+                                                                   &                       & (0.0307)\\   
+   flood $\times$ sector\_group $=$ food\_bev\_tobacco             &                       & -0.0002\\   
+                                                                   &                       & (0.0123)\\   
+   flood $\times$ sector\_group $=$ footwear\_headgear             &                       & 0.0585$^{*}$\\   
+                                                                   &                       & (0.0245)\\   
+   flood $\times$ sector\_group $=$ gems\_precious                 &                       & -0.0119\\   
+                                                                   &                       & (0.0402)\\   
+   flood $\times$ sector\_group $=$ instruments                    &                       & -0.0229\\   
+                                                                   &                       & (0.0277)\\   
+   flood $\times$ sector\_group $=$ leather\_fur                   &                       & 0.0950$^{*}$\\   
+                                                                   &                       & (0.0376)\\   
+   flood $\times$ sector\_group $=$ minerals\_fuels                &                       & 0.0339$^{+}$\\   
+                                                                   &                       & (0.0202)\\   
+   flood $\times$ sector\_group $=$ misc\_manufactures             &                       & -0.0126\\   
+                                                                   &                       & (0.0132)\\   
+   flood $\times$ sector\_group $=$ paper\_print                   &                       & 0.0202\\   
+                                                                   &                       & (0.0131)\\   
+   flood $\times$ sector\_group $=$ plastics\_rubber               &                       & -0.0008\\   
+                                                                   &                       & (0.0155)\\   
+   flood $\times$ sector\_group $=$ stone\_glass\_ceramic          &                       & 0.0042\\   
+                                                                   &                       & (0.0181)\\   
+   flood $\times$ sector\_group $=$ textiles\_apparel              &                       & 0.0488$^{**}$\\   
+                                                                   &                       & (0.0158)\\   
+   flood $\times$ sector\_group $=$ transport\_equipment           &                       & -0.0123\\   
+                                                                   &                       & (0.0111)\\   
+   flood $\times$ sector\_group $=$ vegetable\_products            &                       & -0.0260\\   
+                                                                   &                       & (0.0167)\\   
+   flood $\times$ sector\_group $=$ wood\_products                 &                       & 0.0186\\   
+                                                                   &                       & (0.0163)\\   
+   flood\_l1 $\times$ sector\_group $=$ animal\_products           &                       & 0.0124\\   
+                                                                   &                       & (0.0183)\\   
+   flood\_l1 $\times$ sector\_group $=$ arms                       &                       & 0.0336\\   
+                                                                   &                       & (0.0949)\\   
+   flood\_l1 $\times$ sector\_group $=$ art\_antiques              &                       & 0.0945$^{+}$\\   
+                                                                   &                       & (0.0551)\\   
+   flood\_l1 $\times$ sector\_group $=$ base\_metals               &                       & 0.0192\\   
+                                                                   &                       & (0.0138)\\   
+   flood\_l1 $\times$ sector\_group $=$ chemicals                  &                       & 0.0240\\   
+                                                                   &                       & (0.0182)\\   
+   flood\_l1 $\times$ sector\_group $=$ fats\_oils                 &                       & -0.0379\\   
+                                                                   &                       & (0.0357)\\   
+   flood\_l1 $\times$ sector\_group $=$ food\_bev\_tobacco         &                       & 0.0209\\   
+                                                                   &                       & (0.0131)\\   
+   flood\_l1 $\times$ sector\_group $=$ footwear\_headgear         &                       & 0.0617\\   
+                                                                   &                       & (0.0412)\\   
+   flood\_l1 $\times$ sector\_group $=$ gems\_precious             &                       & 0.0004\\   
+                                                                   &                       & (0.0298)\\   
+   flood\_l1 $\times$ sector\_group $=$ instruments                &                       & 0.0167\\   
+                                                                   &                       & (0.0285)\\   
+   flood\_l1 $\times$ sector\_group $=$ leather\_fur               &                       & 0.1052$^{+}$\\   
+                                                                   &                       & (0.0537)\\   
+   flood\_l1 $\times$ sector\_group $=$ minerals\_fuels            &                       & 0.0357$^{+}$\\   
+                                                                   &                       & (0.0200)\\   
+   flood\_l1 $\times$ sector\_group $=$ misc\_manufactures         &                       & -0.0086\\   
+                                                                   &                       & (0.0149)\\   
+   flood\_l1 $\times$ sector\_group $=$ paper\_print               &                       & 0.0148\\   
+                                                                   &                       & (0.0147)\\   
+   flood\_l1 $\times$ sector\_group $=$ plastics\_rubber           &                       & 0.0023\\   
+                                                                   &                       & (0.0158)\\   
+   flood\_l1 $\times$ sector\_group $=$ stone\_glass\_ceramic      &                       & 0.0141\\   
+                                                                   &                       & (0.0168)\\   
+   flood\_l1 $\times$ sector\_group $=$ textiles\_apparel          &                       & 0.0490$^{**}$\\   
+                                                                   &                       & (0.0176)\\   
+   flood\_l1 $\times$ sector\_group $=$ transport\_equipment       &                       & -0.0124\\   
+                                                                   &                       & (0.0126)\\   
+   flood\_l1 $\times$ sector\_group $=$ vegetable\_products        &                       & 0.0065\\   
+                                                                   &                       & (0.0162)\\   
+   flood\_l1 $\times$ sector\_group $=$ wood\_products             &                       & 0.0011\\   
+                                                                   &                       & (0.0180)\\   
    \midrule
    \emph{Fixed-effects}\\
-   iso3-year                                                       & Yes                   & Yes                     & \\  
-   chapter-year                                                    & Yes                   & Yes                     & Yes\\  
-   iso3-chapter                                                    & Yes                   & Yes                     & Yes\\  
+   iso3-year                                                       & Yes                   & Yes\\  
+   chapter-year                                                    & Yes                   & Yes\\  
+   iso3-chapter                                                    & Yes                   & Yes\\  
    \midrule
    \emph{Fit statistics}\\
-   Observations                                                    & 514,312               & 514,312                 & 524,424\\  
-   Squared Correlation                                             & 0.98962               & 0.98963                 & 0.96346\\  
-   Pseudo R$^2$                                                    & 0.99372               & 0.99373                 & 0.98887\\  
-   BIC                                                             & $1.63\times 10^{10}$  & $1.63\times 10^{10}$    & $2.9\times 10^{10}$\\   
+   Observations                                                    & 514,312               & 514,312\\  
+   Squared Correlation                                             & 0.98962               & 0.98963\\  
+   Pseudo R$^2$                                                    & 0.99372               & 0.99373\\  
+   BIC                                                             & $1.63\times 10^{10}$  & $1.63\times 10^{10}$\\   
    \midrule \midrule
-   \multicolumn{4}{l}{\emph{Clustered (iso3) standard-errors in parentheses}}\\
-   \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+   \multicolumn{3}{l}{\emph{Clustered (iso3) standard-errors in parentheses}}\\
+   \multicolumn{3}{l}{\emph{Signif. Codes: ***: 0.001, **: 0.01, *: 0.05, +: 0.1}}\\
 \end{tabular}
 \par\endgroup
 

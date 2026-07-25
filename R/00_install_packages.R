@@ -7,9 +7,7 @@ pkgs <- c(
   "readxl",       # EM-DAT arrives as .xlsx
   "janitor",      # clean_names() for EM-DAT's messy headers
   "countrycode",  # ISO code reconciliation across datasets
-  "ggplot2",      # figures
-  "modelsummary", # regression tables
-  "concordance"   # HS -> BEC / ISIC mappings (robustness)
+  "jsonlite"      # explorer data export (R/13)
 )
 
 missing <- setdiff(pkgs, rownames(installed.packages()))

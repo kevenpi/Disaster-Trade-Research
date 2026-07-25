@@ -15,14 +15,22 @@ exposure  <- fread("config/exposure_map.csv", colClasses = list(character = "cha
 
 # --- 1. Complete panel: every exporter x chapter x year cell ---------------
 # Only exporters that ever appear in BACI (real trading countries),
-# only years the trade data covers.
+# only 2000-2024: EM-DAT coverage starts in 2000, so earlier years
+# would carry fake-zero disaster dummies (2000 itself only feeds the
+# 2001 lags; every estimation script filters to year >= 2001).
+# ZA1 is the SACU aggregate, not a country: drop it. S19 ("Other Asia,
+# nes") stays and carries Taiwan's trade and disasters (see R/03).
+trade <- trade[year >= 2000 & iso3 != "ZA1"]
 full <- CJ(iso3    = unique(trade$iso3),
            chapter = unique(trade$chapter),
            year    = unique(trade$year))
 panel <- merge(full, trade[, -"exporter_code"],
                by = c("iso3", "chapter", "year"), all.x = TRUE)
+# Rows absent from BACI are true zeros. Rows PRESENT in BACI with NA
+# export_qty (positive value, every underlying quantity missing) must
+# keep the NA: blanket nafill would turn them into fake zero-tons cells.
 zero_cols <- c("export_value", "export_qty", "n_products", "n_destinations")
-panel[, (zero_cols) := lapply(.SD, nafill, fill = 0), .SDcols = zero_cols]
+panel[is.na(export_value), (zero_cols) := 0]
 
 # --- 2. Merge disasters (a country-year absent from EM-DAT had no event) ---
 panel <- merge(panel, disasters, by = c("iso3", "year"), all.x = TRUE)

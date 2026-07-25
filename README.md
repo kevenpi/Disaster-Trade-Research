@@ -8,11 +8,17 @@ x year panel covering 2001-2024.
 
 ## Data (not included)
 
-1. BACI (CEPII): download the HS02 release from
-   www.cepii.fr/CEPII/en/bdd_modele/bdd_modele_item.asp?id=37
+1. BACI (CEPII): download the HS92 release (files named BACI_HS92_Y*)
+   from www.cepii.fr/CEPII/en/bdd_modele/bdd_modele_item.asp?id=37
    into data/raw/baci/.
-2. EM-DAT: register at public.emdat.be, export Natural disasters
-   1994-2024 (all countries) as .xlsx into data/raw/emdat/.
+2. EM-DAT: register at public.emdat.be, export Natural disasters,
+   all countries, as .xlsx into data/raw/emdat/ (our extract spans
+   2000-2026; R/03 filters to events starting 2000-2024 before
+   computing severity cutoffs).
+3. CEPII Gravity V202211 (Gravity_V202211.rds) into data/raw/gravity/
+   (used only by R/02; kept for phase 2).
+4. World Bank GFDD.DI.10 (insurance company assets to GDP) csv into
+   data/raw/worldbank/ for the R/07 heterogeneity split.
 
 ## Pipeline 
 | Script | Purpose |
@@ -33,12 +39,16 @@ x year panel covering 2001-2024.
 | R/15_country_effects.R | per-country models (heterogeneity) |
 | R/16_price_leaders.R | world unit-value models; market-share leaders |
 
-Specification: fepois(y ~ dose terms x exposure | iso3^year +
-chapter^year + iso3^chapter), with standard errors clustered by
-exporter. The exposure maps live in config/exposure_map.csv and were
-fixed before estimation. Every fitted model is saved to output/models/
-as .rds, and every table, figure, and web page regenerates from those
-objects, so no reported number is typed by hand.
+Specification (pooled models): fepois(y ~ dose terms x exposure |
+iso3^year + chapter^year + iso3^chapter), with standard errors
+clustered by exporter. Per-country models (R/15) use chapter + year FE
+with year-clustered SEs plus a permutation test; world price models
+(R/16) are OLS on log unit values. The exposure maps live in
+config/exposure_map.csv and were fixed before estimation. Every fitted
+model is saved to output/models/ as .rds, and the tables, figures, and
+web pages produced by R/12-14 regenerate from those objects, so the
+numbers in those outputs are computed, not typed (prose framing around
+them is still written by hand).
 
 ## Outputs
 
