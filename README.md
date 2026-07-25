@@ -6,7 +6,7 @@ four disaster types (floods, droughts, earthquakes, storms) change the
 composition of exports, using PPML on a completed exporter x HS-chapter
 x year panel covering 2001-2024. 
 
-## Data (not included; ~11 GB)
+## Data (not included)
 
 1. BACI (CEPII): download the HS02 release from
    www.cepii.fr/CEPII/en/bdd_modele/bdd_modele_item.asp?id=37
